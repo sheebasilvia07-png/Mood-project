@@ -1,5 +1,5 @@
 // 🌐 Backend API URL
-const API = "http://localhost:5000";
+const API = "https://mood-project-x67z.onrender.com";
 
 // =======================
 // 🔐 LOGIN FUNCTION
@@ -52,13 +52,13 @@ window.register = async function () {
   }
 
   try {
-    const res = await fetch(`${API}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, password })
-    });
+  const res = await fetch(`${API}/auth/register`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ username, password })
+  });
 
     const data = await res.json();
     console.log("Register response:", data);
@@ -110,7 +110,13 @@ async function getRecommendation() {
   try {
     const mood = document.getElementById("mood").value;
 
-    const res = await fetch(`http://localhost:5000/recommend?mood=${mood}`);
+    const res = await  fetch(`${API}/recommend`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ mood })
+    });
 
     const data = await res.json();
     console.log(data);
