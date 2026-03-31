@@ -21,8 +21,8 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 
 // ✅ mood route
-app.get("/recommend", (req, res) => {
-  const mood = req.query.mood;
+app.post("/recommend", (req, res) => {
+  const mood = req.body.mood;
 
   const data = {
     happy: {

@@ -52,17 +52,16 @@ window.register = async function () {
   }
 
   try {
-  const res = await fetch(`${API}/auth/register`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ username, password })
-  });
+    const res = await fetch(`${API}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username, password })
+    });
 
     const data = await res.json();
     console.log("Register response:", data);
-
     alert(data.message);
 
     // ✅ REDIRECT AFTER REGISTER
@@ -129,23 +128,13 @@ async function getRecommendation() {
 
   } catch (error) {
     console.error("Error:", error);
-    document.getElementById("result").innerHTML = 
-    "<b>Songs:</b><br>" + data,songs.join("<br>") +
-    "<br><br><b>Activities:</b><br>" + data.activities.join("<br>");
+    document.getElementById("result").innerHTML = "<b>Error connecting to server.</b>";
   }
 }
 
-// ✅ 👉 ADD THIS FUNCTION BELOW (or above — both OK)
+// ✅ background change using CSS classes
 function changeBackground(mood) {
-  if (mood === "happy") {
-    document.body.style.background = "linear-gradient(to right, yellow, orange)";
-  } else if (mood === "sad") {
-    document.body.style.background = "linear-gradient(to right, blue, purple)";
-  } else if (mood === "angry") {
-    document.body.style.background = "linear-gradient(to right, red, black)";
-  } else if (mood === "relaxed") {
-    document.body.style.background = "linear-gradient(to right, lightgreen, skyblue)";
-  }
+  document.body.className = mood;
 }
 
 function createParticles() {
