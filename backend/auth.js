@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
       return res.json({ message: "All fields are required" });
     }
 
-    const [existing] = await db.query(
+    const [existing] = await db.promise().query(
       "SELECT * FROM users WHERE username = ?",
       [username]
     );
@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
       return res.json({ message: "User already exists" });
     }
 
-    await db.query(
+    await db.promise().query(
       "INSERT INTO users (username, password) VALUES (?, ?)",
       [username, password]
     );
@@ -42,7 +42,7 @@ router.post("/login", async (req, res) => {
       return res.json({ message: "All fields are required" });
     }
 
-    const [result] = await db.query(
+    const [result] = await db.promise().query(
       "SELECT * FROM users WHERE username = ?",
       [username]
     );
