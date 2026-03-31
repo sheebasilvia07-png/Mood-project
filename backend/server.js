@@ -81,5 +81,5 @@ app.get("/recommend", (req, res) => {
 
 // ✅ start server
 app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+  console.log("https://mood-project-x67z.onrender.com");
 });
