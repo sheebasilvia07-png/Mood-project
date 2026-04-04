@@ -67,7 +67,11 @@ async function searchSpotifySongs(mood) {
     happy: "genre:pop happy",
     sad: "genre:acoustic sad",
     angry: "genre:metal angry",
-    relaxed: "genre:chill relaxing"
+    relaxed: "genre:chill relaxing",
+    energetic: "genre:edm workout",
+    romantic: "genre:romance love",
+    focus: "genre:study focus",
+    nostalgic: "genre:synthwave 80s"
   };
 
   const query = moodMap[mood] || 'genre:pop';
@@ -93,7 +97,11 @@ app.post("/recommend", async (req, res) => {
     happy: { activities: ["Dance 💃", "Go out with friends 🎉", "Listen to music 🎧"] },
     sad:   { activities: ["Watch a movie 🎬", "Take a walk 🌿", "Write your thoughts ✍️"] },
     angry: { activities: ["Workout 🏋️", "Go for a run 🏃", "Meditation 🧘"] },
-    relaxed: { activities: ["Read a book 📖", "Listen to calm music 🎶", "Take a nap 😴"] }
+    relaxed: { activities: ["Read a book 📖", "Listen to calm music 🎶", "Take a nap 😴"] },
+    energetic: { activities: ["Hit the gym 🏋️", "Go for a sprint 🏃", "Start a dance party 🕺"] },
+    romantic: { activities: ["Cook a dinner together 🍝", "Stargaze 🌠", "Watch a rom-com 🍿"] },
+    focus: { activities: ["Deep work session 💻", "Study a new topic 📚", "Organize workspace 🧹"] },
+    nostalgic: { activities: ["Look at old photos 📸", "Call an old friend 📞", "Play a retro game 🎮"] }
   };
 
   const selectedData = data[mood] || { activities: [] };
@@ -105,7 +113,11 @@ app.post("/recommend", async (req, res) => {
     happy: ["Happy - Pharrell Williams", "Good Time - Owl City", "Can't Stop the Feeling - Justin Timberlake"],
     sad: ["Let Her Go - Passenger", "Fix You - Coldplay", "Someone Like You - Adele"],
     angry: ["Stronger - Kanye West", "Believer - Imagine Dragons", "Numb - Linkin Park"],
-    relaxed: ["Weightless - Marconi Union", "Perfect - Ed Sheeran", "Let It Be - The Beatles"]
+    relaxed: ["Weightless - Marconi Union", "Perfect - Ed Sheeran", "Let It Be - The Beatles"],
+    energetic: ["Levels - Avicii", "Titanium - David Guetta", "Don't Stop Me Now - Queen"],
+    romantic: ["Perfect - Ed Sheeran", "All of Me - John Legend", "Can't Help Falling in Love - Elvis Presley"],
+    focus: ["Cornfield Chase - Hans Zimmer", "Experience - Ludovico Einaudi", "Time - Hans Zimmer"],
+    nostalgic: ["Take On Me - a-ha", "Everybody Wants To Rule The World - Tears For Fears", "Billie Jean - Michael Jackson"]
   };
 
   selectedData.songs = spotifySongs.length > 0 ? spotifySongs : (fallbackSongs[mood] || []);

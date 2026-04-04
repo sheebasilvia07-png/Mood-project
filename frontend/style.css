@@ -43,6 +43,30 @@ body.relaxed {
   animation: gradientMove 8s ease infinite;
 }
 
+body.energetic {
+  background: linear-gradient(-45deg, #ff9a9e, #fecfef, #f6d365);
+  background-size: 400% 400%;
+  animation: gradientMove 8s ease infinite;
+}
+
+body.romantic {
+  background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ffb199);
+  background-size: 400% 400%;
+  animation: gradientMove 8s ease infinite;
+}
+
+body.focus {
+  background: linear-gradient(-45deg, #84fab0, #8fd3f4, #a1c4fd);
+  background-size: 400% 400%;
+  animation: gradientMove 8s ease infinite;
+}
+
+body.nostalgic {
+  background: linear-gradient(-45deg, #e0c3fc, #8ec5fc, #cfdef3);
+  background-size: 400% 400%;
+  animation: gradientMove 8s ease infinite;
+}
+
 /* Animation */
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
