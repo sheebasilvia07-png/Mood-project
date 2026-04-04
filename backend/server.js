@@ -76,7 +76,9 @@ async function searchSpotifySongs(mood) {
     const response = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=5`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
-    return response.data.tracks.items.map(t => `${t.name} - ${t.artists[0].name}`);
+    return response.data.tracks.items.map(t => 
+      `<a href="${t.external_urls.spotify}" target="_blank" style="color: #1DB954; text-decoration: none; font-weight: bold; border-bottom: 1px dotted #1DB954;">🎵 ${t.name} - ${t.artists[0].name}</a>`
+    );
   } catch (error) {
     console.error("Spotify Search Error:", error.message);
     return [];
