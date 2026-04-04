@@ -28,15 +28,26 @@ function validatePassword(pwd) {
 // =======================
 // 🔐 LOGIN FUNCTION
 // =======================
-window.login = async function () {
+window.login = async function (event) {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+  
+  // Find button and update text
+  let btn = null;
+  if (event && event.target) {
+      btn = event.target;
+  } else {
+      btn = document.querySelector("button[onclick='login()']") || document.querySelector("button[onclick='login(event)']");
+  }
+
   hideError();
 
   if (!username || !password) {
     showError("Please enter username and password");
     return;
   }
+
+  if (btn) btn.innerText = "Loading...";
 
   try {
     const res = await fetch(`${API}/auth/login`, {
@@ -46,6 +57,8 @@ window.login = async function () {
       },
       body: JSON.stringify({ username, password })
     });
+
+    if (btn) btn.innerText = "Login";
 
     const data = await res.json();
     console.log("Login response:", data);
@@ -59,17 +72,27 @@ window.login = async function () {
       showError(data.message);
     }
   } catch (err) {
+    if (btn) btn.innerText = "Login";
     console.log(err);
-    showError("Server not running!");
+    showError("Server not running or connection took too long!");
   }
 };
 
 // =======================
 // 📝 REGISTER FUNCTION
 // =======================
-window.register = async function () {
+window.register = async function (event) {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+  
+  // Find button and update text
+  let btn = null;
+  if (event && event.target) {
+      btn = event.target;
+  } else {
+      btn = document.querySelector("button[onclick='register()']") || document.querySelector("button[onclick='register(event)']");
+  }
+
   hideError();
 
   if (!username || !password) {
@@ -82,6 +105,8 @@ window.register = async function () {
     return;
   }
 
+  if (btn) btn.innerText = "Loading...";
+
   try {
    const res = await fetch(`${API}/auth/register`, {
       method: "POST",
@@ -90,6 +115,8 @@ window.register = async function () {
       },
       body: JSON.stringify({ username, password })
     });
+
+    if (btn) btn.innerText = "Register";
 
     const data = await res.json();
     console.log("Register response:", data);
@@ -102,8 +129,9 @@ window.register = async function () {
       showError(data.message);
     }
   } catch (err) {
+    if (btn) btn.innerText = "Register";
     console.log(err);
-    showError("Error connecting to server");
+    showError("Error connecting to server or connection took too long!");
   }
 };
 
