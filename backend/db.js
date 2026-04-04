@@ -1,42 +1,61 @@
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const dbPath = path.join(__dirname, "database.sqlite");
+const dbPath = path.join(__dirname, 'users.json');
 
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("❌ DB connection failed:", err.message);
-  } else {
-    console.log("✅ Connected to SQLite database.");
-    // Auto-create users table on boot
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE,
-      password TEXT
-    )`, (err) => {
-        if (err) console.error("Error creating users table:", err);
-    });
-  }
-});
+// Initialize users.json if it doesn't exist
+if (!fs.existsSync(dbPath)) {
+  fs.writeFileSync(dbPath, JSON.stringify([]));
+  console.log("✅ Created users.json database.");
+} else {
+  console.log("✅ Connected to users.json database.");
+}
 
-// Polyfill the mysql2 .promise().query() API so we don't have to rewrite auth.js!
-db.promise = () => ({
-  query: (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-      // Replace parameter placeholders '?' just in case, though they are identical in sqlite
-      if (sql.trim().toUpperCase().startsWith("SELECT")) {
-        db.all(sql, params, (err, rows) => {
-          if (err) reject(err);
-          else resolve([rows]); // return array of rows inside an array to match mysql2 destructuring: const [result] = ...
-        });
-      } else {
-        db.run(sql, params, function(err) {
-          if (err) reject(err);
-          else resolve([{ insertId: this.lastID, affectedRows: this.changes }]);
-        });
-      }
-    });
-  }
-});
+// Helper to reliably read and write JSON data
+function readDB() {
+  const data = fs.readFileSync(dbPath, 'utf8');
+  return JSON.parse(data || '[]');
+}
+
+function writeDB(data) {
+  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+}
+
+// Polyfill the exact mysql2 .promise().query() API so auth.js never has to change
+const db = {
+  promise: () => ({
+    query: (sql, params = []) => {
+      return new Promise((resolve) => {
+        const users = readDB();
+        const queryStr = sql.trim().toUpperCase();
+
+        if (queryStr.startsWith('SELECT')) {
+          // "SELECT * FROM users WHERE username = ?" => params is [username]
+          const user = users.find(u => u.username === params[0]);
+          // Return nested array: result[0] will be 'user' inside auth.js
+          resolve([user ? [user] : []]); 
+        } 
+        else if (queryStr.startsWith('INSERT')) {
+          // "INSERT INTO users (username, password) VALUES (?, ?)" => params is [username, password]
+          const newUser = { id: users.length + 1, username: params[0], password: params[1] };
+          users.push(newUser);
+          writeDB(users);
+          resolve([{ insertId: newUser.id, affectedRows: 1 }]);
+        } 
+        else if (queryStr.startsWith('UPDATE')) {
+          // "UPDATE users SET password = ? WHERE username = ?" => params is [newPassword, username]
+          const user = users.find(u => u.username === params[1]); 
+          if (user) {
+            user.password = params[0];
+            writeDB(users);
+            resolve([{ affectedRows: 1 }]);
+          } else {
+            resolve([{ affectedRows: 0 }]);
+          }
+        }
+      });
+    }
+  })
+};
 
 module.exports = db;
