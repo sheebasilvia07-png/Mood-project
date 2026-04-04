@@ -65,4 +65,35 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// ================= RESET PASSWORD =================
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { username, newPassword } = req.body;
+
+    if (!username || !newPassword) {
+      return res.json({ message: "All fields are required" });
+    }
+
+    const [existing] = await db.promise().query(
+      "SELECT * FROM users WHERE username = ?",
+      [username]
+    );
+
+    if (existing.length === 0) {
+      return res.json({ message: "User not found" });
+    }
+
+    await db.promise().query(
+      "UPDATE users SET password = ? WHERE username = ?",
+      [newPassword, username]
+    );
+
+    res.json({ message: "Password updated successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
