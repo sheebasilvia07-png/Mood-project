@@ -68,13 +68,22 @@ h1 {
 }
 
 /* Inputs */
-select, button {
+input, select, button {
   width: 90%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 10px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   font-size: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #5a8dee;
 }
 
 /* Button */
@@ -123,21 +132,83 @@ button:hover {
 }
 
 /* ✨ Floating Particles */
-.particle {
+#particles {
   position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
   width: 8px;
   height: 8px;
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   opacity: 0.6;
   border-radius: 50%;
   animation: floatUp 10s linear infinite;
 }
 
 @keyframes floatUp {
-  from {
-    transform: translateY(100vh);
-  }
-  to {
-    transform: translateY(-10vh);
-  }
+  0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+}
+
+/* 🎨 Animated Background Shapes */
+.background-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  filter: blur(80px);
+  opacity: 0.6;
+  border-radius: 50%;
+  animation: floatBlobs 15s infinite alternate ease-in-out;
+}
+
+.shape-1 {
+  width: 30vw;
+  height: 30vw;
+  background: rgba(255, 255, 255, 0.4);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 40vw;
+  height: 40vw;
+  background: rgba(255, 255, 255, 0.3);
+  bottom: -20%;
+  right: -10%;
+  animation-delay: 2s;
+}
+
+.shape-3 {
+  width: 25vw;
+  height: 25vw;
+  background: rgba(255, 255, 255, 0.5);
+  top: 40%;
+  left: 40%;
+  animation-delay: 4s;
+}
+
+@keyframes floatBlobs {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(5vw, 5vh) scale(1.2); }
+  100% { transform: translate(-5vw, 10vh) scale(0.9); }
 }

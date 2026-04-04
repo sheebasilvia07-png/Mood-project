@@ -8,14 +8,48 @@
 
 <body class="happy">
 
+<div class="background-shapes">
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
+</div>
+<div id="particles"></div>
 
-<h2>Login / Register</h2>
+<div class="container" style="margin-top: 5vh; max-width: 500px;">
+  <h1 style="font-size: 2.5em; margin-bottom: 5px;">Mood Recommender</h1>
+  <p style="font-weight: 500; color: #444; margin-bottom: 15px;">Embrace your feelings. Discover your vibe.</p>
+  <p style="font-size: 14px; color: #555; margin-bottom: 30px; line-height: 1.5;">
+    Whether you're feeling happy, sad, angry, or relaxed, our platform offers tailored recommendations for movies, music, and activities to match your current state of mind.
+  </p>
 
-<input id="username" placeholder="Username"><br>
-<input id="password" type="password" placeholder="Password"><br>
+  <h2 style="font-size: 1.5em; margin-bottom: 10px;" id="form-title">Login / Register</h2>
 
-<button onclick="login()">Login</button>
-<button onclick="register()">Register</button>
+  <div id="auth-error" style="color: #d8000c; background-color: #ffbaba; padding: 10px; border-radius: 5px; display: none; text-align: center; margin: 0 auto 10px auto; width: 90%; font-size: 14px; box-sizing: border-box;"></div>
+  
+  <div id="login-section">
+    <input id="username" placeholder="Username"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+
+    <button onclick="login()">Login</button>
+    <button onclick="register()" style="background: transparent; color: #5a8dee; border: 2px solid #5a8dee;">Register</button>
+
+    <p style="margin-top: 15px;">
+      <a href="#" onclick="toggleResetForm(true)" style="color: #5a8dee; font-size: 14px; text-decoration: none; font-weight: 500;">Forgot Password?</a>
+    </p>
+  </div>
+
+  <div id="reset-section" style="display: none;">
+    <input id="reset-username" placeholder="Username"><br>
+    <input id="reset-password" type="password" placeholder="New Password"><br>
+    
+    <p style="font-size: 12px; color: #444; margin: 0 auto 10px auto; width: 90%; text-align: left; line-height: 1.4;">
+      Password requirements:<br>- Minimum 8 characters<br>- At least 1 uppercase, 1 lowercase letter<br>- At least 1 number
+    </p>
+
+    <button onclick="resetPassword()" style="background: #e67e22;">Reset Password</button>
+    <button onclick="toggleResetForm(false)" style="background: transparent; color: #555; border: 2px solid #555;">Cancel</button>
+  </div>
+</div>
 
 <script src="app.js"></script>
 </body>

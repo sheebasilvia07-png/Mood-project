@@ -2,14 +2,39 @@
 const API = "https://mood-project-x67z.onrender.com";
 
 // =======================
+// 🛠 UI HELPERS & VALIDATION
+// =======================
+function showError(msg) {
+  const errDiv = document.getElementById("auth-error");
+  if (errDiv) {
+    errDiv.innerText = msg;
+    errDiv.style.display = "block";
+  } else {
+    alert(msg);
+  }
+}
+
+function hideError() {
+  const errDiv = document.getElementById("auth-error");
+  if (errDiv) errDiv.style.display = "none";
+}
+
+function validatePassword(pwd) {
+  // Min 8 chars, 1 uppercase, 1 lowercase, 1 number
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  return regex.test(pwd);
+}
+
+// =======================
 // 🔐 LOGIN FUNCTION
 // =======================
 window.login = async function () {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+  hideError();
 
   if (!username || !password) {
-    alert("Please enter username and password");
+    showError("Please enter username and password");
     return;
   }
 
@@ -25,17 +50,17 @@ window.login = async function () {
     const data = await res.json();
     console.log("Login response:", data);
 
-    alert(data.message);
-
-    // ✅ REDIRECT TO DASHBOARD
     if (data.message === "Login successful") {
-      localStorage.setItem("user", username); // store user
+      localStorage.setItem("user", username);
       window.location.href = "dashboard.html";
+    } else if (data.message === "Invalid credentials") {
+      showError("Incorrect password or username. Please try again.");
+    } else {
+      showError(data.message);
     }
-
   } catch (err) {
     console.log(err);
-    alert("Server not running!");
+    showError("Server not running!");
   }
 };
 
@@ -45,9 +70,15 @@ window.login = async function () {
 window.register = async function () {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+  hideError();
 
   if (!username || !password) {
-    alert("Please enter username and password");
+    showError("Please enter username and password");
+    return;
+  }
+
+  if (!validatePassword(password)) {
+    showError("Password must be at least 8 chars long with 1 uppercase, 1 lowercase & 1 number.");
     return;
   }
 
@@ -62,17 +93,71 @@ window.register = async function () {
 
     const data = await res.json();
     console.log("Register response:", data);
-    alert(data.message);
 
-    // ✅ REDIRECT AFTER REGISTER
     if (data.message === "Registered successfully") {
+      alert("Registered successfully!");
       localStorage.setItem("user", username);
       window.location.href = "dashboard.html";
+    } else {
+      showError(data.message);
     }
-
   } catch (err) {
     console.log(err);
-    alert("Error connecting to server");
+    showError("Error connecting to server");
+  }
+};
+
+// =======================
+// 🔑 RESET PASSWORD FORMS
+// =======================
+window.toggleResetForm = function(show) {
+  hideError();
+  if (show) {
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("reset-section").style.display = "block";
+    document.getElementById("form-title").innerText = "Reset Password";
+  } else {
+    document.getElementById("login-section").style.display = "block";
+    document.getElementById("reset-section").style.display = "none";
+    document.getElementById("form-title").innerText = "Login / Register";
+  }
+};
+
+window.resetPassword = async function() {
+  const username = document.getElementById("reset-username").value;
+  const newPassword = document.getElementById("reset-password").value;
+  hideError();
+
+  if (!username || !newPassword) {
+    showError("Please enter both username and new password.");
+    return;
+  }
+
+  if (!validatePassword(newPassword)) {
+    showError("New password must be at least 8 chars long with 1 uppercase, 1 lowercase & 1 number.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/auth/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, newPassword })
+    });
+
+    const data = await res.json();
+    
+    if (data.message === "Password updated successfully") {
+      alert("Password reset successfully! Please log in.");
+      document.getElementById("reset-username").value = "";
+      document.getElementById("reset-password").value = "";
+      toggleResetForm(false);
+    } else {
+      showError(data.message);
+    }
+  } catch (err) {
+    console.log(err);
+    showError("Error connecting to server");
   }
 };
 
@@ -80,6 +165,9 @@ window.register = async function () {
 // 👤 DASHBOARD USER CHECK
 // =======================
 window.onload = function () {
+  // ✅ Create floating particles
+  createParticles();
+
   const user = localStorage.getItem("user");
 
   // If on dashboard and not logged in → redirect to login
