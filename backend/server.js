@@ -68,10 +68,10 @@ async function searchSpotifySongs(mood) {
     sad: "genre:acoustic sad",
     angry: "genre:metal angry",
     relaxed: "genre:chill relaxing",
-    energetic: "genre:edm workout",
-    romantic: "genre:romance love",
-    focus: "genre:study focus",
-    nostalgic: "genre:synthwave 80s"
+    energetic: "edm workout",
+    romantic: "love songs romantic",
+    focus: "lofi focus",
+    nostalgic: "80s synthwave"
   };
 
   const query = moodMap[mood] || 'genre:pop';
